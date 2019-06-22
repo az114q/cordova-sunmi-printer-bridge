@@ -2,7 +2,7 @@
 <plugin id="com.soeSunmiPrinter.cordova" version="1.0.0" xmlns="http://apache.org/cordova/ns/plugins/1.0" xmlns:android="http://schemas.android.com/apk/res/android">
   <name>SoeSunmiPrinterPlugin</name>
   <js-module name="SoeSunmiPrinterPlugin" src="www/SoeSunmiPrinterPlugin.js">
-    <clobbers target="cordova.plugins.SoeSunmiPrinterPlugin" />
+    <clobbers target="SoeSunmiPrinterPlugin" />
   </js-module>
   <platform name="android">
     <config-file parent="/*" target="res/xml/config.xml">
