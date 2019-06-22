@@ -1,0 +1,16 @@
+{
+  "name": "cordova-sunmi-printer-bridge",
+  "version": "1.0.0",
+  "description": "Sunmi K1 printer solution",
+  "scripts": {
+      "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "soe-wq",
+  "license": "MIT",
+  "cordova": {
+      "id": "com.soeSunmiPrinter.cordova",
+      "platforms": [
+          "android"
+      ]
+  }
+}
