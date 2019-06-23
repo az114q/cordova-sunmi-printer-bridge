@@ -1,6 +1,9 @@
 <?xml version='1.0' encoding='utf-8'?>
 <plugin id="com.soeSunmiPrinter.cordova" version="1.0.0" xmlns="http://apache.org/cordova/ns/plugins/1.0" xmlns:android="http://schemas.android.com/apk/res/android">
   <name>SoeSunmiPrinterPlugin</name>
+  <engines>
+    <engine name="cordova" version=">=3.0.0"/>
+  </engines>
   <js-module name="SoeSunmiPrinterPlugin" src="www/SoeSunmiPrinterPlugin.js">
     <clobbers target="SoeSunmiPrinterPlugin" />
   </js-module>
@@ -8,9 +11,17 @@
     <config-file parent="/*" target="res/xml/config.xml">
       <feature name="SoeSunmiPrinterPlugin">
         <param name="android-package" value="com.soeSunmiPrinter.cordova.SoeSunmiPrinterPlugin" />
+        <param name="onload" value="true" />
       </feature>
     </config-file>
-    <config-file parent="/*" target="AndroidManifest.xml"></config-file>
+    <config-file target="AndroidManifest.xml" parent="/manifest/application">
+      <service android:name="com.sunmi.ExtPrinterService">
+        <intent-filter>
+          <action android:name="com.sunmi.ExtPrinterService" />
+        </intent-filter>
+      </service>
+    </config-file>
     <source-file src="src/android/SoeSunmiPrinterPlugin.java" target-dir="src/com/soeSunmiPrinter/cordova/SoeSunmiPrinterPlugin" />
+    <source-file src="src/android/com/sunmi/ExtPrinterService.aidl" target-dir="src/com/sunmi/"/>
   </platform>
 </plugin>

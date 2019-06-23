@@ -7,7 +7,18 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.sunmi.extprinterservice;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.ComponentName;
+import android.content.ServiceConnection;
+
+import org.apache.cordova.CordovaInterface;
+import org.apache.cordova.CordovaWebView;
+
+import android.os.IBinder;
+
+import com.sunmi.ExtPrinterService;
 
 /**
  * This class echoes a string called from JavaScript.
@@ -30,10 +41,14 @@ public class SoeSunmiPrinterPlugin extends CordovaPlugin {
   public void initialize(CordovaInterface cordova, CordovaWebView webView) {
     super.initialize(cordova, webView);
 
+    Context applicationContext = this.cordova.getActivity().getApplicationContext();
+
     Intent intent = new Intent(); 
-    intent.setPackage("com.sunmi.extprinterservice"); 
-    intent.setAction("com.sunmi.extprinterservice.PrinterService"); 
-    bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE); 
+    intent.setPackage("com.sunmi"); 
+    intent.setAction("com.sunmi.ExtPrinterService"); 
+
+    applicationContext.startService(intent);
+    applicationContext.bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE); 
   }
   @Override
   public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
@@ -56,15 +71,13 @@ public class SoeSunmiPrinterPlugin extends CordovaPlugin {
     }
   }
 
-  public void printColumnsText(JSONArray colsTextArr, JSONArray colsWidthArr, JSONArray colsAlign,
-      final CallbackContext callbackContext) {
+  public void printColumnsText(JSONArray colsTextArr, JSONArray colsWidthArr, JSONArray colsAlign) {
     final String[] clst = new String[colsTextArr.length()];
     for (int i = 0; i < colsTextArr.length(); i++) {
       try {
         clst[i] = colsTextArr.getString(i);
       } catch (JSONException e) {
         clst[i] = "-";
-        Log.i(TAG, "ERROR TEXT: " + e.getMessage());
       }
     }
     final int[] clsw = new int[colsWidthArr.length()];
@@ -73,7 +86,6 @@ public class SoeSunmiPrinterPlugin extends CordovaPlugin {
         clsw[i] = colsWidthArr.getInt(i);
       } catch (JSONException e) {
         clsw[i] = 1;
-        Log.i(TAG, "ERROR WIDTH: " + e.getMessage());
       }
     }
     final int[] clsa = new int[colsAlign.length()];
@@ -82,11 +94,15 @@ public class SoeSunmiPrinterPlugin extends CordovaPlugin {
         clsa[i] = colsAlign.getInt(i);
       } catch (JSONException e) {
         clsa[i] = 0;
-        Log.i(TAG, "ERROR ALIGN: " + e.getMessage());
       }
     }
-    extInterface.printColumnsText(clst, clsw, clsa);
-    unbindService(serviceConnection);
+    try {
+      extInterface.printColumnsText(clst, clsw, clsa);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    
+    // applicationContext.unbindService(serviceConnection);
   }
 
 }

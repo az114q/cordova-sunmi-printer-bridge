@@ -5,6 +5,6 @@ exports.coolMethod = function (arg0, success, error) {
 };
 exports.printColumnsText = function (colsTextArr, colsWidthArr, colsAlign) {
   return new Promise(function (resolve, reject) {
-    exec(resolve, reject, "Printer", "printColumnsText", [colsTextArr, colsWidthArr, colsAlign]);
+    exec(resolve, reject, "SoeSunmiPrinterPlugin", "printColumnsText", [colsTextArr, colsWidthArr, colsAlign]);
   });
 };
