@@ -37,19 +37,21 @@ public class SoeSunmiPrinterPlugin extends CordovaPlugin {
     public void onServiceDisconnected(ComponentName name) {
     }
   };
+
   @Override
   public void initialize(CordovaInterface cordova, CordovaWebView webView) {
     super.initialize(cordova, webView);
 
     Context applicationContext = this.cordova.getActivity().getApplicationContext();
 
-    Intent intent = new Intent(); 
-    intent.setPackage("com.sunmi"); 
-    intent.setAction("com.sunmi.ExtPrinterService"); 
+    Intent intent = new Intent();
+    intent.setPackage("com.sunmi.extprinterservice");
+    intent.setAction("com.sunmi.extprinterservice.PrinterService");
 
     applicationContext.startService(intent);
-    applicationContext.bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE); 
+    applicationContext.bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
   }
+
   @Override
   public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
     if (action.equals("coolMethod")) {
@@ -58,6 +60,12 @@ public class SoeSunmiPrinterPlugin extends CordovaPlugin {
       return true;
     } else if (action.equals("printColumnsText")) {
       this.printColumnsText(args.getJSONArray(0), args.getJSONArray(1), args.getJSONArray(2));
+      return true;
+    } else if (action.equals("printerInit")) {
+      this.printerInit();
+      return true;
+    } else if (action.equals("cutPaper")) {
+      this.cutPaper(args.getJSONArray(0), args.getJSONArray(1));
       return true;
     }
     return false;
@@ -68,6 +76,14 @@ public class SoeSunmiPrinterPlugin extends CordovaPlugin {
       callbackContext.success(message);
     } else {
       callbackContext.error("Expected one non-empty string argument.");
+    }
+  }
+
+  public void printerInit() {
+    try {
+      extInterface.printerInit();
+    } catch (Exception e) {
+      e.printStackTrace();
     }
   }
 
@@ -101,7 +117,33 @@ public class SoeSunmiPrinterPlugin extends CordovaPlugin {
     } catch (Exception e) {
       e.printStackTrace();
     }
-    
+
+    // applicationContext.unbindService(serviceConnection);
+  }
+
+  public void cutPaper(JSONArray modeArr, JSONArray distanceArr) {
+    final int[] clsMode = new int[modeArr.length()];
+    for (int i = 0; i < modeArr.length(); i++) {
+      try {
+        clsMode[i] = modeArr.getInt(i);
+      } catch (JSONException e) {
+        clsMode[i] = 1;
+      }
+    }
+    final int[] clsDistance = new int[distanceArr.length()];
+    for (int i = 0; i < distanceArr.length(); i++) {
+      try {
+        clsDistance[i] = distanceArr.getInt(i);
+      } catch (JSONException e) {
+        clsDistance[i] = 0;
+      }
+    }
+    try {
+      extInterface.cutPaper(clsMode, clsDistance);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+
     // applicationContext.unbindService(serviceConnection);
   }
 

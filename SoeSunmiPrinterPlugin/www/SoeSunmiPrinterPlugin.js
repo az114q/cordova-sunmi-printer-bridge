@@ -3,8 +3,18 @@ var exec = require('cordova/exec');
 exports.coolMethod = function (arg0, success, error) {
   exec(success, error, 'SoeSunmiPrinterPlugin', 'coolMethod', [arg0]);
 };
-exports.printColumnsText = function (colsTextArr, colsWidthArr, colsAlign) {
+exports.printerInit = function () {
   return new Promise(function (resolve, reject) {
-    exec(resolve, reject, "SoeSunmiPrinterPlugin", "printColumnsText", [colsTextArr, colsWidthArr, colsAlign]);
+    cordova.exec(resolve, reject, "SoeSunmiPrinterPlugin", "printerInit", []);
+  });
+},
+exports.printColumnsText = function (colsTextArr, colsWidthArr, colsAlign) {
+    return new Promise(function (resolve, reject) {
+      exec(resolve, reject, "SoeSunmiPrinterPlugin", "printColumnsText", [colsTextArr, colsWidthArr, colsAlign]);
+    });
+  };
+exports.cutPaper = function (modeArr, distanceArr) {
+  return new Promise(function (resolve, reject) {
+    exec(resolve, reject, "SoeSunmiPrinterPlugin", "cutPaper", [modeArr, distanceArr]);
   });
 };
