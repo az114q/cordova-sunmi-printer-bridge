@@ -13,8 +13,8 @@ exports.printColumnsText = function (colsTextArr, colsWidthArr, colsAlign) {
       exec(resolve, reject, "SoeSunmiPrinterPlugin", "printColumnsText", [colsTextArr, colsWidthArr, colsAlign]);
     });
   };
-exports.cutPaper = function (modeArr, distanceArr) {
+exports.cutPaper = function (mode, distance) {
   return new Promise(function (resolve, reject) {
-    exec(resolve, reject, "SoeSunmiPrinterPlugin", "cutPaper", [modeArr, distanceArr]);
+    exec(resolve, reject, "SoeSunmiPrinterPlugin", "cutPaper", [mode, distance]);
   });
 };

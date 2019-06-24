@@ -65,7 +65,7 @@ public class SoeSunmiPrinterPlugin extends CordovaPlugin {
       this.printerInit();
       return true;
     } else if (action.equals("cutPaper")) {
-      this.cutPaper(args.getJSONArray(0), args.getJSONArray(1));
+      this.cutPaper(args.getInt(0), args.getInt(1));
       return true;
     }
     return false;
@@ -121,29 +121,12 @@ public class SoeSunmiPrinterPlugin extends CordovaPlugin {
     // applicationContext.unbindService(serviceConnection);
   }
 
-  public void cutPaper(JSONArray modeArr, JSONArray distanceArr) {
-    final int[] clsMode = new int[modeArr.length()];
-    for (int i = 0; i < modeArr.length(); i++) {
-      try {
-        clsMode[i] = modeArr.getInt(i);
-      } catch (JSONException e) {
-        clsMode[i] = 1;
-      }
-    }
-    final int[] clsDistance = new int[distanceArr.length()];
-    for (int i = 0; i < distanceArr.length(); i++) {
-      try {
-        clsDistance[i] = distanceArr.getInt(i);
-      } catch (JSONException e) {
-        clsDistance[i] = 0;
-      }
-    }
+  public void cutPaper(int mode, int distance) {
     try {
-      extInterface.cutPaper(clsMode, clsDistance);
+      extInterface.cutPaper(mode, distance);
     } catch (Exception e) {
       e.printStackTrace();
     }
-
     // applicationContext.unbindService(serviceConnection);
   }
 
