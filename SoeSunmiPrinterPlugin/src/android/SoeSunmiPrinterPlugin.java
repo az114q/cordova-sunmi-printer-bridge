@@ -17,40 +17,46 @@ import org.apache.cordova.CordovaInterface;
 import org.apache.cordova.CordovaWebView;
 
 import android.os.IBinder;
+import android.os.Bundle;
 
-import com.sunmi.ExtPrinterService;
+import com.sunmi.extprinterservice.ExtPrinterService;
 
 /**
  * This class echoes a string called from JavaScript.
  */
 public class SoeSunmiPrinterPlugin extends CordovaPlugin {
   private static final String TAG = "SoeSunmiPrinter";
-  private ExtPrinterService extInterface;
+  private ExtPrinterService extPrinterService = null;
 
-  private ServiceConnection serviceConnection = new ServiceConnection() {
-    @Override
-    public void onServiceConnected(ComponentName name, IBinder service) {
-      extInterface = ExtPrinterService.Stub.asInterface(service);
-    }
-
-    @Override
-    public void onServiceDisconnected(ComponentName name) {
-    }
-  };
-
-  @Override
   public void initialize(CordovaInterface cordova, CordovaWebView webView) {
     super.initialize(cordova, webView);
-
     Context applicationContext = this.cordova.getActivity().getApplicationContext();
 
     Intent intent = new Intent();
     intent.setPackage("com.sunmi.extprinterservice");
     intent.setAction("com.sunmi.extprinterservice.PrinterService");
-
-    applicationContext.startService(intent);
-    applicationContext.bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
+    applicationContext.bindService(intent, connService, Context.BIND_AUTO_CREATE);
   }
+  private ServiceConnection connService = new ServiceConnection() {
+
+    @Override
+    public void onServiceDisconnected(ComponentName name) {
+      extPrinterService = null;
+    }
+
+    @Override
+    public void onServiceConnected(ComponentName name, IBinder service) {
+      extPrinterService = ExtPrinterService.Stub.asInterface(service);
+    }
+  };
+
+  // @Override
+  // public void onDestroy() {
+  //   if (extPrinterService != null) {
+  //     unbindService(connService);
+  //   }
+  //   super.onDestroy();
+  // }
 
   @Override
   public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
@@ -81,7 +87,7 @@ public class SoeSunmiPrinterPlugin extends CordovaPlugin {
 
   public void printerInit() {
     try {
-      extInterface.printerInit();
+      extPrinterService.printerInit();
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -113,7 +119,7 @@ public class SoeSunmiPrinterPlugin extends CordovaPlugin {
       }
     }
     try {
-      extInterface.printColumnsText(clst, clsw, clsa);
+      extPrinterService.printColumnsText(clst, clsw, clsa);
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -123,7 +129,7 @@ public class SoeSunmiPrinterPlugin extends CordovaPlugin {
 
   public void cutPaper(int mode, int distance) {
     try {
-      extInterface.cutPaper(mode, distance);
+      extPrinterService.cutPaper(mode, distance);
     } catch (Exception e) {
       e.printStackTrace();
     }

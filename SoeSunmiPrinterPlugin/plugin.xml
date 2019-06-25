@@ -15,13 +15,13 @@
       </feature>
     </config-file>
     <config-file target="AndroidManifest.xml" parent="/manifest/application">
-      <service android:name="com.sunmi.ExtPrinterService">
+      <service android:name="com.sunmi.extprinterservice.ExtPrinterService">
         <intent-filter>
-          <action android:name="com.sunmi.ExtPrinterService" />
+          <action android:name="com.sunmi.extprinterservice.ExtPrinterService" />
         </intent-filter>
       </service>
     </config-file>
     <source-file src="src/android/SoeSunmiPrinterPlugin.java" target-dir="src/com/soeSunmiPrinter/cordova/SoeSunmiPrinterPlugin" />
-    <source-file src="src/android/com/sunmi/ExtPrinterService.aidl" target-dir="src/com/sunmi/"/>
+    <source-file src="src/android/com/sunmi/extprinterservice/ExtPrinterService.aidl" target-dir="src/com/sunmi/extprinterservice/"/>
   </platform>
 </plugin>

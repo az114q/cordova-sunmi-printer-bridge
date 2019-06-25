@@ -1,5 +1,5 @@
 // IPrinterService.aidl
-package com.sunmi;
+package com.sunmi.extprinterservice;
 
 // Declare any non-default types here with import statements
 
