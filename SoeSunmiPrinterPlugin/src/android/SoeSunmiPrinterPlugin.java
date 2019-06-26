@@ -59,6 +59,7 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.app.Activity;
 
 import org.apache.cordova.CordovaInterface;
 import org.apache.cordova.CordovaWebView;
@@ -84,18 +85,20 @@ public class SoeSunmiPrinterPlugin extends CordovaPlugin {
 
   public void initialize(CordovaInterface cordova, CordovaWebView webView) {
     super.initialize(cordova, webView);
+    Activity context = cordova.getActivity();
 
     Intent intent = new Intent();
     intent.setPackage("com.sunmi.extprinterservice");
     intent.setAction("com.sunmi.extprinterservice.PrinterService");
-    Context.bindService(intent, connService, Context.BIND_AUTO_CREATE);
+    context.bindService(intent, connService, Context.BIND_AUTO_CREATE);
   }
 
 
   @Override
   public void onDestroy() {
     if (extPrinterService != null) {
-      Context.unbindService(connService);
+       Activity context = cordova.getActivity();
+      context.unbindService(connService);
     }
     super.onDestroy();
   }
