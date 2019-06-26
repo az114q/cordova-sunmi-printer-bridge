@@ -7,17 +7,61 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.content.Context;
-import android.content.Intent;
+import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+
 import android.content.IntentFilter;
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
+import android.app.Dialog;
+import android.app.Service;
 import android.content.ComponentName;
+import android.content.Context;
+import android.content.ContextWrapper;
+import android.content.Intent;
 import android.content.ServiceConnection;
+import android.content.res.Configuration;
+import android.graphics.Color;
+import android.graphics.Outline;
+import android.media.AudioManager;
+import android.media.SoundPool;
+import android.os.Build;
+import android.os.Bundle;
+import android.os.Environment;
+import android.os.Handler;
+import android.os.IBinder;
+import android.os.RemoteException;
+import android.text.TextUtils;
+import android.util.DisplayMetrics;
+import android.util.Log;
+import android.view.Display;
+import android.view.KeyEvent;
+import android.view.LayoutInflater;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewOutlineProvider;
+import android.view.animation.LinearInterpolator;
+import android.view.animation.ScaleAnimation;
+import android.view.inputmethod.EditorInfo;
+import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import org.apache.cordova.CordovaInterface;
 import org.apache.cordova.CordovaWebView;
-
-import android.os.IBinder;
-import android.os.Bundle;
 
 import com.sunmi.extprinterservice.ExtPrinterService;
 
@@ -27,36 +71,34 @@ import com.sunmi.extprinterservice.ExtPrinterService;
 public class SoeSunmiPrinterPlugin extends CordovaPlugin {
   private static final String TAG = "SoeSunmiPrinter";
   private ExtPrinterService extPrinterService = null;
-
-  public void initialize(CordovaInterface cordova, CordovaWebView webView) {
-    super.initialize(cordova, webView);
-    Context applicationContext = this.cordova.getActivity().getApplicationContext();
-
-    Intent intent = new Intent();
-    intent.setPackage("com.sunmi.extprinterservice");
-    intent.setAction("com.sunmi.extprinterservice.PrinterService");
-    applicationContext.bindService(intent, connService, Context.BIND_AUTO_CREATE);
-  }
   private ServiceConnection connService = new ServiceConnection() {
-
     @Override
     public void onServiceDisconnected(ComponentName name) {
       extPrinterService = null;
     }
-
     @Override
     public void onServiceConnected(ComponentName name, IBinder service) {
       extPrinterService = ExtPrinterService.Stub.asInterface(service);
     }
   };
 
-  // @Override
-  // public void onDestroy() {
-  //   if (extPrinterService != null) {
-  //     unbindService(connService);
-  //   }
-  //   super.onDestroy();
-  // }
+  public void initialize(CordovaInterface cordova, CordovaWebView webView) {
+    super.initialize(cordova, webView);
+
+    Intent intent = new Intent();
+    intent.setPackage("com.sunmi.extprinterservice");
+    intent.setAction("com.sunmi.extprinterservice.PrinterService");
+    Context.bindService(intent, connService, Context.BIND_AUTO_CREATE);
+  }
+
+
+  @Override
+  public void onDestroy() {
+    if (extPrinterService != null) {
+      Context.unbindService(connService);
+    }
+    super.onDestroy();
+  }
 
   @Override
   public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
@@ -123,8 +165,6 @@ public class SoeSunmiPrinterPlugin extends CordovaPlugin {
     } catch (Exception e) {
       e.printStackTrace();
     }
-
-    // applicationContext.unbindService(serviceConnection);
   }
 
   public void cutPaper(int mode, int distance) {
@@ -133,7 +173,6 @@ public class SoeSunmiPrinterPlugin extends CordovaPlugin {
     } catch (Exception e) {
       e.printStackTrace();
     }
-    // applicationContext.unbindService(serviceConnection);
   }
 
 }

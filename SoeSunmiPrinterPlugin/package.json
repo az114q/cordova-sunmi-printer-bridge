@@ -1,6 +1,6 @@
 {
   "name": "cordova-sunmi-printer-bridge",
-  "version": "1.2.8",
+  "version": "1.3.5",
   "description": "Sunmi K1 printer solution",
   "main": "www/SoeSunmiPrinterPlugin.js",
   "scripts": {
